@@ -5,6 +5,8 @@ import { Navigate, useNavigate } from 'react-router-dom'
 const LoginPage = () => {
 
   const [showPassword, setShowPassword] = useState(false)
+  const [userName, setUserName] = useState("")
+  const [password, setPassword] = useState("")
 
   const navigate = useNavigate()
 
@@ -17,7 +19,7 @@ const LoginPage = () => {
       
       {/* login form */}
       <div
-        className='flex flex-col gap-10 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-950'
+        className='flex flex-col gap-10 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-900'
       >
         
         {/* title */}
@@ -27,7 +29,7 @@ const LoginPage = () => {
           <h1
             className='text-3xl font-bold'
           >
-            Login
+            Sign In
           </h1>  
         </div>
 
@@ -48,9 +50,10 @@ const LoginPage = () => {
               className='relative'
             >
               <input 
+                onChange={(e) => setUserName(e.target.value)}
                 placeholder='Enter your username'
                 type="text"
-                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-900 border-slate-600' 
+                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-800 border-slate-600' 
               />
               <svg className='top-2.5 left-2.5 absolute' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2S7.5 4.019 7.5 6.5M20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1z" />
@@ -71,9 +74,10 @@ const LoginPage = () => {
               className='relative'
             >
               <input 
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder='Enter your password'
                 type={showPassword ? "text" : "password"}
-                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-900 border-slate-600' 
+                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-800 border-slate-600' 
               />
               <svg className='top-2.5 left-2.5 absolute' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3" />

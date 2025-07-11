@@ -1,9 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const RegisterPage = () => {
 
   const [showPassword, setShowPassword] = useState(false)
+
+  const navigate = useNavigate()
+
 
   return (
     // page
@@ -13,7 +17,7 @@ const RegisterPage = () => {
       
       {/* register form */}
       <div
-        className='flex flex-col gap-10 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-950'
+        className='flex flex-col gap-10 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-900 md:w-80'
       >
         
         {/* title */}
@@ -46,7 +50,7 @@ const RegisterPage = () => {
               <input 
                 placeholder='Enter your username'
                 type="text"
-                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-900 border-slate-600' 
+                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-800 border-slate-600' 
               />
               <svg className='top-2.5 left-2.5 absolute' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M7.5 6.5C7.5 8.981 9.519 11 12 11s4.5-2.019 4.5-4.5S14.481 2 12 2S7.5 4.019 7.5 6.5M20 21h1v-1c0-3.859-3.141-7-7-7h-4c-3.86 0-7 3.141-7 7v1z" />
@@ -69,7 +73,7 @@ const RegisterPage = () => {
               <input 
                 placeholder='Enter your password'
                 type={showPassword ? "text" : "password"}
-                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-900 border-slate-600' 
+                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-800 border-slate-600' 
               />
               <svg className='top-2.5 left-2.5 absolute' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3" />
@@ -114,7 +118,7 @@ const RegisterPage = () => {
               <input 
                 placeholder='Confirm your password'
                 type={showPassword ? "text" : "password"}
-                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-900 border-slate-600' 
+                className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-800 border-slate-600' 
               />
               <svg className='top-2.5 left-2.5 absolute' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3" />
@@ -158,7 +162,7 @@ const RegisterPage = () => {
             Log in
           </button>
           <button
-            onClick={() => navigate("/Register")}
+            onClick={() => navigate("/")}
             className='opacity-50'
           >
             Already have an account, Sign in

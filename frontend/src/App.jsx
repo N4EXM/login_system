@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import RegisterPage from './pages/RegisterPage'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 import LoginPage from './pages/LoginPage'
+import AdminPage from './pages/adminPage'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -13,7 +11,7 @@ function App() {
     <>
 
       <div
-        className='w-full bg-slate-900 min-w-screen h-full min-h-screen flex items-center justify-center'  
+        className='w-full bg-slate-800 min-w-screen h-full min-h-screen flex items-center justify-center'  
       >
 
       <BrowserRouter>
@@ -27,8 +25,8 @@ function App() {
             element={<RegisterPage/>}
           />
           <Route
-            path='/'
-            element={<LoginPage/>}
+            path='/AdminPage'
+            element={<AdminPage/>}
           />
         </Routes>
       </BrowserRouter>
