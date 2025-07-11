@@ -29,11 +29,6 @@ const LoginPage = () => {
           >
             Login
           </h1>  
-          <p
-            className='text-sm text-center px-1 opacity-70'
-          >
-            Enter your username and password to log in
-          </p>
         </div>
 
         {/* input fields */}
@@ -53,6 +48,7 @@ const LoginPage = () => {
               className='relative'
             >
               <input 
+                placeholder='Enter your username'
                 type="text"
                 className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-900 border-slate-600' 
               />
@@ -69,12 +65,13 @@ const LoginPage = () => {
             <p
               className='font-medium'
             >
-              Name:
+              Password:
             </p>  
             <div
               className='relative'
             >
               <input 
+                placeholder='Enter your password'
                 type={showPassword ? "text" : "password"}
                 className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-900 border-slate-600' 
               />
@@ -112,10 +109,10 @@ const LoginPage = () => {
 
         {/* buttons */}
         <div
-          className='flex flex-col gap-3'        
+          className='flex flex-col gap-5'        
         >
           <button
-            className='bg-sky-500 text-sm w-full p-2  font-semibold rounded-sm'
+            className='bg-rose-500 text-sm w-full p-2  font-semibold rounded-sm'
           >
             Log in
           </button>
