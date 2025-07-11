@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import RegisterPage from './pages/RegisterPage'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -12,11 +13,19 @@ function App() {
     <>
 
       <div
-        className='w-full bg-slate-800 min-w-screen h-full min-h-screen'  
+        className='w-full bg-slate-900 min-w-screen h-full min-h-screen flex items-center justify-center'  
       >
 
       <BrowserRouter>
         <Routes>
+          <Route
+            path='/'
+            element={<LoginPage/>}
+          />
+          <Route
+            path='/Register'
+            element={<RegisterPage/>}
+          />
           <Route
             path='/'
             element={<LoginPage/>}
