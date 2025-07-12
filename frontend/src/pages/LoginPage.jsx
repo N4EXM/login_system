@@ -10,6 +10,8 @@ const LoginPage = () => {
 
   const navigate = useNavigate()
 
+  
+
   return (
 
     // page
@@ -18,8 +20,8 @@ const LoginPage = () => {
     >
       
       {/* login form */}
-      <div
-        className='flex flex-col gap-10 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-900'
+      <form
+        className='flex flex-col gap-5 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-900 md:w-80'
       >
         
         {/* title */}
@@ -113,13 +115,13 @@ const LoginPage = () => {
 
         {/* buttons */}
         <div
-          className='flex flex-col gap-5'        
+          className='flex flex-col gap-5 mt-5'        
         >
-          <button
-            className='bg-rose-500 text-sm w-full p-2  font-semibold rounded-sm'
-          >
-            Log in
-          </button>
+          <input
+            value={"Submit"}
+            className='font-semibold p-2 w-full rounded bg-emerald-500 text-sm'
+            type='submit'
+          />
           <button
             onClick={() => navigate("/Register")}
             className='opacity-50'
@@ -128,7 +130,7 @@ const LoginPage = () => {
           </button>
         </div>
 
-      </div>
+      </form>
 
     </div>
   )

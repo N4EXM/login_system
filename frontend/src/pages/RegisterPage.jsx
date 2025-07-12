@@ -5,6 +5,17 @@ import { useNavigate } from 'react-router-dom'
 const RegisterPage = () => {
 
   const [showPassword, setShowPassword] = useState(false)
+  const [userName, setUserName] = useState("")
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+
+  const handleRegisterSubmit = (e) => {
+    
+    e.preventDefault()
+
+    
+
+  }
 
   const navigate = useNavigate()
 
@@ -16,8 +27,8 @@ const RegisterPage = () => {
     >
       
       {/* register form */}
-      <div
-        className='flex flex-col gap-10 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-900 md:w-80'
+      <form
+        className='flex flex-col gap-5 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-900 md:w-80'
       >
         
         {/* title */}
@@ -48,6 +59,8 @@ const RegisterPage = () => {
               className='relative'
             >
               <input 
+                onChange={(e) => setUserName(e.target.value)}
+                value={userName}
                 placeholder='Enter your username'
                 type="text"
                 className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-800 border-slate-600' 
@@ -71,6 +84,8 @@ const RegisterPage = () => {
               className='relative'
             >
               <input 
+                onChange={(e) => setPassword(e.target.value)}
+                value={userName}
                 placeholder='Enter your password'
                 type={showPassword ? "text" : "password"}
                 className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-800 border-slate-600' 
@@ -117,6 +132,7 @@ const RegisterPage = () => {
             >
               <input 
                 placeholder='Confirm your password'
+                value={confirmPassword}
                 type={showPassword ? "text" : "password"}
                 className='p-2 pl-8 outline-none border w-full rounded-sm bg-slate-800 border-slate-600' 
               />
@@ -154,13 +170,13 @@ const RegisterPage = () => {
 
         {/* buttons */}
         <div
-          className='flex flex-col gap-5'        
+          className='flex flex-col gap-5 mt-5'        
         >
-          <button
-            className='bg-rose-500 text-sm w-full p-2  font-semibold rounded-sm'
-          >
-            Log in
-          </button>
+          <input
+            value={"Submit"}
+            className='font-semibold p-2 w-full rounded bg-emerald-500 text-sm'
+            type='submit'
+          />
           <button
             onClick={() => navigate("/")}
             className='opacity-50'
@@ -169,7 +185,7 @@ const RegisterPage = () => {
           </button>
         </div>
 
-      </div>
+      </form>
 
     </div>
   )
