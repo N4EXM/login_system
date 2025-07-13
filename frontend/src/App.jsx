@@ -3,9 +3,9 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 import AdminPage from './pages/adminPage'
+import RoleProtectedRoute from './RoleProtectedRoute'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
@@ -13,8 +13,6 @@ function App() {
       <div
         className='w-full bg-slate-800 min-w-screen h-full min-h-screen flex items-center justify-center'  
       >
-
-      <BrowserRouter>
         <Routes>
           <Route
             path='/'
@@ -24,13 +22,18 @@ function App() {
             path='/Register'
             element={<RegisterPage/>}
           />
-          <Route
-            path='/AdminPage'
-            element={<AdminPage/>}
-          />
+          
+          {/* protected routes */}
+          <Route 
+            element={<RoleProtectedRoute allowedRoles={["admin"]}/>}
+            
+          >
+            <Route
+              path='/AdminPage'
+              element={<AdminPage/>}
+            />
+          </Route>  
         </Routes>
-      </BrowserRouter>
-
       </div>  
     </>
   )

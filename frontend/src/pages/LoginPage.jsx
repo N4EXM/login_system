@@ -1,16 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const LoginPage = () => {
 
   const [showPassword, setShowPassword] = useState(false)
   const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("")
-
-  const navigate = useNavigate()
-
-  
 
   return (
 
@@ -122,12 +118,12 @@ const LoginPage = () => {
             className='font-semibold p-2 w-full rounded bg-emerald-500 text-sm'
             type='submit'
           />
-          <button
-            onClick={() => navigate("/Register")}
-            className='opacity-50'
+          <Link
+            to="/Register"
+            className='opacity-50 w-full text-center'
           >
             Don't have an account, Sign Up
-          </button>
+          </Link>
         </div>
 
       </form>

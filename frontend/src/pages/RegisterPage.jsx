@@ -1,38 +1,34 @@
 import React from 'react'
+import axios from 'axios'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 const RegisterPage = () => {
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false)
-  const [userName, setUserName] = useState("")
-  const [password, setPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+  const { login } = useAuth()
 
+  const [showPassword, setShowPassword] = useState(false) // toggles if the user wants to see the password
+  const [userName, setUserName] = useState("") // gets the users current name
+  const [password, setPassword] = useState("") // gets the users current password
+  const [confirmPassword, setConfirmPassword] = useState("") // gets the password from the confirm input
+  const [error, setError] = useState("") // gets the error if there is a error
+
+  // sends the form data to the backend
   const handleRegisterSubmit = (e) => {
     
     e.preventDefault()
 
     if (password === confirmPassword) {
         
-      const newUser = {
-        userName: userName,
-        password: password
-      }
+      login(userName, password)
 
-      axios
-        .post("http://localhost:3000/backend/register.php", newUser)
-        .then((response) => {
-          
-        })
-
+    }
+    else {
+      setError("Password does not match")
     }
 
   }
-
-  const navigate = useNavigate()
-
 
   return (
     // page
@@ -42,6 +38,7 @@ const RegisterPage = () => {
       
       {/* register form */}
       <form
+        onClick={(e) => handleRegisterSubmit(e)}
         className='flex flex-col gap-5 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-900 md:w-80'
       >
         
@@ -181,23 +178,29 @@ const RegisterPage = () => {
 
           </div>
 
+          <p
+            className='text-rose-400 w-full text-center'
+          >
+            {error}
+          </p>
+
         </div>
 
         {/* buttons */}
         <div
-          className='flex flex-col gap-5 mt-5'        
+          className='flex flex-col gap-5 '        
         >
           <input
             value={"Submit"}
             className='font-semibold p-2 w-full rounded bg-emerald-500 text-sm'
             type='submit'
           />
-          <button
-            onClick={() => navigate("/")}
-            className='opacity-50'
+          <Link 
+            to='/' 
+            className='w-full text-center opacity-50'
           >
-            Already have an account, Sign in
-          </button>
+            Already have an account? Sign in
+          </Link>
         </div>
 
       </form>
