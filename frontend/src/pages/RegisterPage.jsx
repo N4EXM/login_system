@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 const RegisterPage = () => {
 
   const [showPassword, setShowPassword] = useState(false)
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false)
   const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -13,7 +14,20 @@ const RegisterPage = () => {
     
     e.preventDefault()
 
-    
+    if (password === confirmPassword) {
+        
+      const newUser = {
+        userName: userName,
+        password: password
+      }
+
+      axios
+        .post("http://localhost:3000/backend/register.php", newUser)
+        .then((response) => {
+          
+        })
+
+    }
 
   }
 
@@ -131,6 +145,7 @@ const RegisterPage = () => {
               className='relative'
             >
               <input 
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder='Confirm your password'
                 value={confirmPassword}
                 type={showPassword ? "text" : "password"}
