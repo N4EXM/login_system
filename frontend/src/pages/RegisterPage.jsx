@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext'
 
 const RegisterPage = () => {
 
-  const { login } = useAuth()
+  // const { login } = useAuth()
 
   const [showPassword, setShowPassword] = useState(false) // toggles if the user wants to see the password
   const [userName, setUserName] = useState("") // gets the users current name
@@ -15,13 +15,28 @@ const RegisterPage = () => {
   const [error, setError] = useState("") // gets the error if there is a error
 
   // sends the form data to the backend
-  const handleRegisterSubmit = (e) => {
+  const handleRegisterSubmit = async (e) => {
     
     e.preventDefault()
 
+    const newUser = {
+      userName: userName,
+      password: password
+    }
+
     if (password === confirmPassword) {
         
-      login(userName, password)
+      try {
+        const response = await axios.post("http://localhost:8000/api.php?action=register", newUser)
+
+        if (response.success === true) {
+          login(userName, password)
+        }
+
+      }
+      catch (error) {
+
+      }
 
     }
     else {

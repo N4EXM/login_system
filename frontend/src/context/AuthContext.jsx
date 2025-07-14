@@ -6,11 +6,12 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     // Check authentication status on initial load
     // useEffect(() => {
+
     //     const checkAuth = async () => {
     //         try {
     //             const response = await fetch('http://localhost:8000/api.php?action=check-auth', {
@@ -46,12 +47,12 @@ export const AuthProvider = ({ children }) => {
             if (data.success) {
                 setUser(data.user);
                 setIsAuthenticated(true);
-                return data.message;
+                navigate("/home")
             }
             return false;
         } catch (error) {
             console.error('Login failed:', error);
-            return data.message;
+            return false;
         }
     };
 

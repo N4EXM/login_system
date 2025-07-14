@@ -4,6 +4,7 @@ import RegisterPage from './pages/RegisterPage'
 import LoginPage from './pages/LoginPage'
 import AdminPage from './pages/adminPage'
 import RoleProtectedRoute from './RoleProtectedRoute'
+import { AuthProvider } from './context/AuthContext'
 
 function App() {
 
@@ -13,27 +14,33 @@ function App() {
       <div
         className='w-full bg-slate-800 min-w-screen h-full min-h-screen flex items-center justify-center'  
       >
-        <Routes>
-          <Route
-            path='/'
-            element={<LoginPage/>}
-          />
-          <Route
-            path='/Register'
-            element={<RegisterPage/>}
-          />
-          
-          {/* protected routes */}
-          <Route 
-            element={<RoleProtectedRoute allowedRoles={["admin"]}/>}
-            
-          >
-            <Route
-              path='/AdminPage'
-              element={<AdminPage/>}
-            />
-          </Route>  
-        </Routes>
+        
+          <BrowserRouter>
+            <AuthProvider>
+              <Routes>
+                <Route
+                  path='/'
+                  element={<LoginPage/>}
+                />
+                <Route
+                  path='/Register'
+                  element={<RegisterPage/>}
+                />
+                
+                {/* protected routes */}
+                <Route 
+                  element={<RoleProtectedRoute allowedRoles={["admin"]}/>}
+                  
+                >
+                  <Route
+                    path='/AdminPage'
+                    element={<AdminPage/>}
+                  />
+                </Route>  
+              </Routes>
+            </AuthProvider>
+          </BrowserRouter>
+        
       </div>  
     </>
   )
