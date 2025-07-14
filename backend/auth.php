@@ -103,7 +103,10 @@ function register($username, $email, $password) {
     $success = $stmt->execute([$username, $email, $passwordHash]);
     
     if ($success) {
-        return ['success' => true, 'message' => 'Registration successful'];
+        return [
+            'success' => true, 
+            'message' => 'Registration successful',
+        ];
     }
     
     return ['success' => false, 'message' => 'Registration failed'];
