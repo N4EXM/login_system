@@ -75,11 +75,11 @@ function logout() {
     return ['success' => true];
 }
 
-function register($username, $email, $password) {
+function register($username, $password) {
     global $pdo;
     
     // Validate input
-    if (empty($username) || empty($email) || empty($password)) {
+    if (empty($username) || empty($password)) {
         return ['success' => false, 'message' => 'All fields are required'];
     }
     
@@ -88,19 +88,19 @@ function register($username, $email, $password) {
     }
     
     // Check if username/email exists
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
-    $stmt->execute([$username, $email]);
+    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+    $stmt->execute([$username]);
     
     if ($stmt->fetch()) {
-        return ['success' => false, 'message' => 'Username or email already exists'];
+        return ['success' => false, 'message' => 'Username already exists'];
     }
     
     // Hash password
     $passwordHash = password_hash($password, PASSWORD_BCRYPT);
     
     // Insert new user
-    $stmt = $pdo->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
-    $success = $stmt->execute([$username, $email, $passwordHash]);
+    $stmt = $pdo->prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)");
+    $success = $stmt->execute([$username, $passwordHash]);
     
     if ($success) {
         return [

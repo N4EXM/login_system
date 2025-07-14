@@ -2,6 +2,17 @@
 require 'auth.php';
 
 header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
 $action = $_GET['action'] ?? '';
 
@@ -22,7 +33,7 @@ try {
 
         case 'register':
             $data = json_decode(file_get_contents('php://input'), true);
-            $response = register($data['username'], $data['email'], $data['password']);
+            $response = register($data['username'], $data['password']);
             break;
             
         default:
