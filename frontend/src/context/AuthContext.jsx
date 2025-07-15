@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
@@ -9,33 +9,10 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    // Check authentication status on initial load
-    // useEffect(() => {
-
-    //     const checkAuth = async () => {
-    //         try {
-    //             const response = await fetch('http://localhost:8000/api.php?action=check-auth', {
-    //                 credentials: 'include'
-    //             });
-    //             const data = await response.json();
-                
-    //             if (data.authenticated) {
-    //                 setUser(data.user);
-    //                 setIsAuthenticated(true);
-    //             }
-    //         } catch (error) {
-    //             console.error('Auth check failed:', error);
-    //         } finally {
-    //             setIsLoading(false);
-    //         }
-    //     };
-        
-    //     checkAuth();
-    // }, []);
-
     const login = async (username, password) => {
+        setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:8000/api.php?action=login', {
+            const response = await fetch('http://localhost:3000/backend/api.php?action=login', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
@@ -47,18 +24,21 @@ export const AuthProvider = ({ children }) => {
             if (data.success) {
                 setUser(data.user);
                 setIsAuthenticated(true);
-                navigate("/home")
+                navigate("/home");
+                return true;
             }
             return false;
         } catch (error) {
             console.error('Login failed:', error);
             return false;
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const logout = async () => {
         try {
-            await fetch('http://localhost:8000/api.php?action=logout', {
+            await fetch('http://localhost:3000/backend/api.php?action=logout', {
                 credentials: 'include'
             });
             
@@ -71,8 +51,14 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, logout }}>
-            {!isLoading && children}
+        <AuthContext.Provider value={{ 
+            user, 
+            isAuthenticated, 
+            isLoading, 
+            login, 
+            logout 
+        }}>
+            {children}
         </AuthContext.Provider>
     );
 };

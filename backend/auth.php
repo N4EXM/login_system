@@ -1,7 +1,8 @@
 <?php
-session_start();
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json");
 
 require 'db_connection.php';
@@ -78,38 +79,38 @@ function logout() {
 function register($username, $password) {
     global $pdo;
     
-    // Validate input
+    // Basic validation
     if (empty($username) || empty($password)) {
-        return ['success' => false, 'message' => 'All fields are required'];
+        return ['success' => false, 'message' => 'Username and password are required'];
     }
-    
+
     if (strlen($password) < 8) {
         return ['success' => false, 'message' => 'Password must be at least 8 characters'];
     }
-    
-    // Check if username/email exists
-    $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
-    $stmt->execute([$username]);
-    
-    if ($stmt->fetch()) {
-        return ['success' => false, 'message' => 'Username already exists'];
-    }
-    
-    // Hash password
-    $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-    
-    // Insert new user
-    $stmt = $pdo->prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)");
-    $success = $stmt->execute([$username, $passwordHash]);
-    
-    if ($success) {
-        return [
-            'success' => true, 
-            'message' => 'Registration successful',
-        ];
-    }
-    
-    return ['success' => false, 'message' => 'Registration failed'];
-}
 
+    try {
+        // Check if username exists
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        
+        if ($stmt->fetch()) {
+            return ['success' => false, 'message' => 'Username already exists'];
+        }
+
+        // Hash password
+        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+        
+        // Insert new user (with or without email)
+        $stmt = $pdo->prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)");
+        $success = $stmt->execute([$username, $passwordHash]);
+
+        return $success 
+            ? ['success' => true, 'message' => 'Registration successful'] 
+            : ['success' => false, 'message' => 'Registration failed'];
+            
+    } catch (PDOException $e) {
+        error_log("Database error: " . $e->getMessage());
+        return ['success' => false, 'message' => 'Database error occurred'];
+    }
+}
 ?>

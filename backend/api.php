@@ -1,12 +1,11 @@
 <?php
-require 'auth.php';
-
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
+require 'auth.php';
 
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -15,8 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 $action = $_GET['action'] ?? '';
+session_start();
+
 
 try {
+
+    $input = file_get_contents('php://input');
+    $data = json_decode($input, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception('Invalid JSON input');
+    }
+    
     switch ($action) {
         case 'login':
             $data = json_decode(file_get_contents('php://input'), true);
@@ -34,6 +42,8 @@ try {
         case 'register':
             $data = json_decode(file_get_contents('php://input'), true);
             $response = register($data['username'], $data['password']);
+            error_log("Registration attempt: " . print_r($data, true)); // Debugging
+            error_log("Registration result: " . print_r($response, true)); // Debugging
             break;
             
         default:

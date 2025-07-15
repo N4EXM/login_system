@@ -1,57 +1,72 @@
 import React from 'react'
-import axios from 'axios'
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const RegisterPage = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  // const { login } = useAuth()
+  const [showPassword, setShowPassword] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [showPassword, setShowPassword] = useState(false) // toggles if the user wants to see the password
-  const [userName, setUserName] = useState("") // gets the users current name
-  const [password, setPassword] = useState("") // gets the users current password
-  const [confirmPassword, setConfirmPassword] = useState("") // gets the password from the confirm input
-  const [error, setError] = useState("") // gets the error if there is a error
-
-  // sends the form data to the backend
   const handleRegisterSubmit = async (e) => {
-    
-    e.preventDefault()
+    e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-    const newUser = {
-      userName: userName,
-      password: password
+    if (password !== confirmPassword) {
+      setError("Password does not match");
+      setIsLoading(false);
+      return;
     }
 
-    if ((password === confirmPassword) && password != "") {
-        
-      try {
-        const response = await axios.post("http://localhost:3000/api.php?action=register", newUser)
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      setIsLoading(false);
+      return;
+    }
 
-        if (response.success === true) {
-          login(userName, password)
-        }
-        else {
-          setError(response.message)
-        }
+    try {
+      const response = await fetch("http://localhost:3000/backend/api.php?action=register", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: userName,
+          password: password
+        })
+      });
 
+      const data = await response.json();
+      console.log('Registration response:', data);
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
       }
-      // try {
-      //   if ((password === confirmPassword) && password != "") {
-      //     setError("yay")
-      //   }
-      // }
-      catch (error) {
-        setError(error.message)
+
+      if (data.success) {
+        // Automatically log in after successful registration
+        const loginSuccess = await login(userName, password);
+        if (!loginSuccess) {
+          navigate('/login'); // Redirect to login if auto-login fails
+        }
+      } else {
+        setError(data.message || 'Registration failed');
       }
-
+    } catch (error) {
+      console.error('Registration error:', error);
+      setError(error.message || 'Failed to complete registration');
+    } finally {
+      setIsLoading(false);
     }
-    else {
-      setError("Password does not match")
-    }
-
-  }
+  };
 
   return (
     // page
@@ -212,10 +227,11 @@ const RegisterPage = () => {
           className='flex flex-col gap-5 '        
         >
           <button
-            className='font-semibold p-2 w-full rounded bg-emerald-500 text-sm'
+            className='font-semibold p-2 w-full rounded bg-emerald-500 text-sm disabled:opacity-50'
             type='submit'
+            disabled={isLoading}
           >
-            Submit
+            {isLoading ? 'Processing...' : 'Submit'}
           </button>
           <Link 
             to='/' 
