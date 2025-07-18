@@ -34,7 +34,7 @@ const RegisterPage = () => {
     try {
       const response = await fetch("http://localhost:3000/backend/api.php?action=register", {
         method: "POST",
-        credentials: "include",
+        // credentials: "include",
         headers: {
           'Content-Type': 'application/json'
         },
