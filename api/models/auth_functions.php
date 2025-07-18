@@ -1,7 +1,5 @@
 <?php
 
-require "database.php";
-
 // Cookie settings (shared between functions)
 $cookieSettings = [
     'expires' => time() + 86400 * 30, // 30 days
@@ -12,7 +10,7 @@ $cookieSettings = [
     'samesite' => 'Lax'
 ];
 
-function login($pdo, $username, $password) {
+function login($pdo, $username, $password): void {
 
     global $cookieSettings;
 
@@ -76,7 +74,7 @@ function login($pdo, $username, $password) {
 
 }
 
-function Register($pdo, $username, $password) {
+function Register($pdo, $username, $password): void {
 
     try {
 
