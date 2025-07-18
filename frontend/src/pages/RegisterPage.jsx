@@ -44,26 +44,58 @@ const RegisterPage = () => {
         })
       });
 
-      const data = await response.json();
-      console.log('Registration response:', data);
+      // const data = await response.json();
+      // console.log('Registration response:', data);
 
-      if (!response.ok) {
+      // if (!response.ok) {
+      //   throw new Error(data.message || 'Registration failed');
+      // }
+
+      // if (data.success) {
+      //   // Automatically log in after successful registration
+      //   const loginSuccess = await login(userName, password);
+      //   if (!loginSuccess) {
+      //     navigate('/login'); // Redirect to login if auto-login fails
+      //   }
+      // } else {
+      //   setError(data.message || 'Registration failed');
+      // }
+    
+      // First check if we got any response at all
+      if (!response) {
+        throw new Error('No response from server');
+      }
+
+      // Get response text first for debugging
+      const responseText = await response.text();
+      console.log('Raw response:', responseText); // Debugging
+
+      // Then parse as JSON
+      const data = responseText ? JSON.parse(responseText) : null;
+
+      // Check if parsing succeeded
+      if (!data) {
+        throw new Error('Invalid server response');
+      }
+
+      // Now safely check the success property
+      if (!data.success) {
         throw new Error(data.message || 'Registration failed');
       }
 
-      if (data.success) {
-        // Automatically log in after successful registration
-        const loginSuccess = await login(userName, password);
-        if (!loginSuccess) {
-          navigate('/login'); // Redirect to login if auto-login fails
-        }
-      } else {
-        setError(data.message || 'Registration failed');
+      // Registration successful
+      // You might want to automatically log the user in here
+      const loginResponse = await loginUser(userName, password);
+      if (loginResponse.success) {
+        navigate('/Home'); // Redirect to protected page
       }
-    } catch (error) {
+
+    } 
+    catch (error) {
       console.error('Registration error:', error);
       setError(error.message || 'Failed to complete registration');
-    } finally {
+    } 
+    finally {
       setIsLoading(false);
     }
   };
