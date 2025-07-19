@@ -75,56 +75,65 @@ function login($pdo, $username, $password): void {
 }
 
 function Register($pdo, $username, $password): void {
+    header('Content-Type: application/json');
+    
+    $username = trim($username);
+    $password = trim($password);
 
     try {
-
-        if (!isset($username) || !isset($password)) {
+        if (empty($username) || empty($password)) {
+            http_response_code(400);
             echo json_encode([
                 "success" => false,
-                "message" => "username or password is empty."
+                "message" => "Username or password is empty."
+            ]);
+            exit();
+        }
+
+        // Check if user exists
+        $stmt = $pdo->prepare("SELECT id FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        $existingUser = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($existingUser) {
+            http_response_code(409); // Conflict
+            echo json_encode([
+                "success" => false,
+                "message" => "User already exists"
+            ]);
+            exit();
+        }
+        
+        // Hash the password
+        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+        if ($passwordHash === false) {
+            throw new Exception("Password hashing failed");
+        }
+        
+        // Insert the user
+        $stmt = $pdo->prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)");
+        $success = $stmt->execute([$username, $passwordHash]);
+
+        if ($success) {
+            http_response_code(201); // Created
+            echo json_encode([
+                "success" => true,
+                "message" => "Registration successful"
+            ]);
+        } else {
+            http_response_code(500);
+            echo json_encode([
+                "success" => false,
+                "message" => "Registration failed"
             ]);
         }
-        else {
-
-            // check if the user is in the database 
-            $stmt = $pdo -> prepare("SELECT id FROM users WHERE username = ?");
-            $stmt -> execute([$username]);
-            
-            if ($stmt -> fetch(PDO::FETCH_ASSOC)) {
-                
-                echo json_encode([
-                    "success" => false,
-                    "message" => "user already exists"
-                ]);
-
-            }
-            else {
-                
-                // hash the password
-                $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-                
-                // insert the user
-                $stmt = $pdo -> prepare("INSERT INTO users (username, password_hash) VALUES (?, ?)");
-                $success = $stmt->execute([$username, $passwordHash]);
-
-                if ($success) {
-                    login($pdo, $username, $password);
-                }
-
-            }
-
-
-        }
-
-    }
-    catch (PDOException $e) {
-
-        error_log("Login error: " . $e->getMessage());
+    } catch (PDOException $e) {
+        http_response_code(500);
         echo json_encode([
-            'success' => false,
-            'message' => 'Database error occurred'
-        ]);
-
+            "success" => false,
+            "message" => "Database error",
+            "error" => $e->getMessage()
+        ]); 
     }
 
 }

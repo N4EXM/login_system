@@ -1,16 +1,15 @@
 <?php
-$servername = "127.0.0.1";
-$username = "root";
-$password = "";
-$db_name = "login_system";
+$host = '127.0.0.1';
+$db   = 'login_system';
+$user = 'root';
+$pass = '';
+$charset = 'utf8mb4';
 
-try {
-  $conn = new PDO("mysql:host=$servername;dbname=$db_name", username: $username, password: $password);
-  // set the PDO error mode to exception
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  // echo "Connected successfully";
-} 
-catch(PDOException $e) {
-  echo "Connection failed: " . $e->getMessage();
-}
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+$pdo = new PDO($dsn, $user, $pass, $options);
 ?> 

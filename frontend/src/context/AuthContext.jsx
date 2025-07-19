@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
     const login = async (username, password) => {
         setIsLoading(true);
         try {
-            const response = await fetch('http://localhost:3000/backend/api.php?action=login', {
+            const response = await fetch('http://localhost:3000/api/routes/api.php?action=login', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },

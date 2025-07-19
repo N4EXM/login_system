@@ -1,12 +1,23 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+
 
 const LoginPage = () => {
 
   const [showPassword, setShowPassword] = useState(false)
   const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("")
+  const { login } = useAuth();
+
+  
+  const handleLoginSubmit = (e) => {
+    
+    e.preventDefault();
+
+    login(userName, password)     
+  } 
 
   return (
 
@@ -17,6 +28,7 @@ const LoginPage = () => {
       
       {/* login form */}
       <form
+        onSubmit={(e) => handleLoginSubmit(e)}
         className='flex flex-col gap-5 p-5 border border-slate-600 w-full rounded-md text-xs bg-slate-900 md:w-80'
       >
         

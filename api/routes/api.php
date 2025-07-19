@@ -10,7 +10,7 @@ error_reporting(E_ALL);
 ob_start();
 
 header("Content-Type: application/json; charset=UTF-8");
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: http://localhost:5173");
 header("Access-Control-Allow-Credentials: true");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
@@ -22,37 +22,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require "database.php";
-require "auth_functions";
+require "./../config/database.php";
+require "./../models/auth_functions.php";
 
 try {
 
     $input = json_decode(json: file_get_contents(filename: "php://input"), associative: true);
+
 
     if (json_last_error() !== JSON_ERROR_NONE) {
         throw new Exception('Invalid JSON input');
     }
 
     $action = $_GET['action'] ?? '';
-    $response = json_encode([
+    $response = [
         "success" => false,
         "message" => "no action"
-    ]);
+    ];
 
     switch ($action) {
         case "register":
-            $response = Register(pdo: $pdo, username: $input["username"], password: $input["password"]);
+            // echo json_encode([
+            //     "data" => $input
+            // ]);
+            $response = Register($pdo, $input["username"],$input["password"]);
             break;
 
         case "login":
+            // echo json_encode([
+            //     "data" => $input
+            // ]);
             $response = login(pdo: $pdo, username: $input["username"], password: $input["password"]);
             break;
 
         default:
-            throw new RuntimeException(message: "invalid action");
+            echo json_encode($response);
+            break;
     }
 
 }
 catch (Exception $e) {
-
+    echo json_encode([
+        "success" => false,
+        "message" => $e -> getMessage()
+    ]);
 }
