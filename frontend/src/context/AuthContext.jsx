@@ -21,10 +21,12 @@ export const AuthProvider = ({ children }) => {
             
             const data = await response.json();
             
-            if (data.success) {
+            if (data.success && data.user != null) {
+                console.log(data.user)
                 setUser(data.user);
                 setIsAuthenticated(true);
                 navigate("/home");
+                console.log(user)
                 return true;
             }
             return false;

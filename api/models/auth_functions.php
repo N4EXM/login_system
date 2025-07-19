@@ -42,7 +42,7 @@ function login($pdo, $username, $password): void {
 
                 echo json_encode([
                     "success" => true,
-                    "data" => [
+                    "user" => [
                         "username" => $user["username"],
                         "role" => $user["role"],
                     ]
