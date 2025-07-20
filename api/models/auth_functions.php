@@ -33,6 +33,7 @@ function login($pdo, $username, $password): void {
 
                 session_regenerate_id(delete_old_session: true);
 
+                $_SESSION["id"] = $user["id"];
                 $_SESSION["username"] = $user["username"];
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['logged_in'] = true;
@@ -74,7 +75,7 @@ function login($pdo, $username, $password): void {
 
 }
 
-function Register($pdo, $username, $password): void {
+function register($pdo, $username, $password): void {
     header('Content-Type: application/json');
     
     $username = trim($username);
@@ -135,5 +136,30 @@ function Register($pdo, $username, $password): void {
             "error" => $e->getMessage()
         ]); 
     }
+
+}
+
+function auth_check(): void {
+
+    if (session_start() === PHP_SESSION_NONE) {
+        session_start();
+    }
+
+    if (isset($_SESSION["id"]) && isset($_COOKIE["auth_session"]) && $_COOKIE["auth_session"] === session_id()) {
+
+        echo json_encode([
+            "authenticated" => true,
+            "user" => [
+                "id" => $_SESSION["id"],
+                "username" => $_SESSION["username"],
+                "role" => $_SESSION["role"]
+            ]
+        ]);
+
+    }
+
+    echo json_encode([
+        "authenticated" => false
+    ]);
 
 }

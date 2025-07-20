@@ -126,7 +126,7 @@ const LoginPage = () => {
           className='flex flex-col gap-5 mt-5'        
         >
           <button
-            className='font-semibold p-2 w-full rounded bg-emerald-500 text-sm'
+            className='font-semibold p-2 w-full rounded bg-emerald-500 text-sm '
             type='submit'
           >
             Submit

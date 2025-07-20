@@ -25,6 +25,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require "./../config/database.php";
 require "./../models/auth_functions.php";
 
+session_start();
+
 try {
 
     $input = json_decode(json: file_get_contents(filename: "php://input"), associative: true);
@@ -45,7 +47,7 @@ try {
             // echo json_encode([
             //     "data" => $input
             // ]);
-            $response = Register($pdo, $input["username"],$input["password"]);
+            $response =register($pdo, $input["username"],$input["password"]);
             break;
 
         case "login":
