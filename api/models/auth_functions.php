@@ -80,11 +80,11 @@ $cookieSettings = [
 function login($pdo, $username, $password): void {
     global $cookieSettings;
 
-    // Start session
+    // Start session if not already started
     if (session_status() === PHP_SESSION_NONE) {
         session_start([
-            'cookie_lifetime' => 86400 * 30,
-            'cookie_secure' => false,
+            'cookie_lifetime' => 86400 * 30, // 30 days
+            'cookie_secure' => false,        // true in production
             'cookie_httponly' => true,
             'cookie_samesite' => 'Lax'
         ]);
@@ -92,32 +92,38 @@ function login($pdo, $username, $password): void {
 
     try {
         // Validate input
+        $username = trim($username);
+        $password = trim($password);
+        
         if (empty($username) || empty($password)) {
             throw new InvalidArgumentException('Username and password are required');
         }
 
         // Check user exists
         $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
-        $stmt->execute([trim($username)]);
+        $stmt->execute([$username]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$user || !password_verify($password, $user['password_hash'])) {
             throw new RuntimeException('Invalid credentials');
         }
 
-        // Regenerate session ID
+        // Regenerate session ID to prevent session fixation
         session_regenerate_id(true);
 
-        // Set session variables
-        $_SESSION = [
-            'id' => $user['id'],
-            'username' => $user['username'],
-            'role' => $user['role'],
-            'logged_in' => true
-        ];
+        // Set session variables - THIS IS THE CRUCIAL PART
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['user_role'] = $user['role'];
+        $_SESSION['logged_in'] = true;
+        $_SESSION['last_activity'] = time();
 
         // Set secure cookie
-        setcookie('auth_session', session_id(), $cookieSettings);
+        setcookie(
+            'auth_session', 
+            session_id(), 
+            $cookieSettings
+        );
 
         // Return success response
         header('Content-Type: application/json');
@@ -132,6 +138,10 @@ function login($pdo, $username, $password): void {
         exit();
 
     } catch (Exception $e) {
+        // Clear any partial session data on failure
+        session_unset();
+        session_destroy();
+        
         error_log("Login error: " . $e->getMessage());
         header('Content-Type: application/json');
         http_response_code(401);
@@ -232,35 +242,22 @@ function register($pdo, $username, $password): void {
 
 // }
 
-function auth_check(): void {
-    // Start session if not already started
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start([
-            'cookie_lifetime' => 86400 * 30, // 30 days
-            'cookie_secure' => false,       // true in production
-            'cookie_httponly' => true,
-            'cookie_samesite' => 'Lax'
-        ]);
+function auth_check(): array {
+    // Session should already be started by the API script
+    if (!isset($_SESSION['user_id'], $_COOKIE['auth_session'])) {
+        return ['authenticated' => false];
     }
 
-    // Prepare default response
-    $response = ['authenticated' => false];
-
-    // Check if user is authenticated
-    if (isset($_SESSION['id'], $_COOKIE['auth_session']) && 
-        $_COOKIE['auth_session'] === session_id()) {
-        $response = [
-            'authenticated' => true,
-            'user' => [
-                'id' => $_SESSION['id'],
-                'username' => $_SESSION['username'],
-                'role' => $_SESSION['role']
-            ]
-        ];
+    if ($_COOKIE['auth_session'] !== session_id()) {
+        return ['authenticated' => false];
     }
 
-    // Send JSON response and terminate
-    header('Content-Type: application/json');
-    echo json_encode($response);
-    exit();
+    return [
+        'authenticated' => true,
+        'user' => [
+            'id' => $_SESSION['user_id'],
+            'username' => $_SESSION['username'],
+            'role' => $_SESSION['user_role']
+        ]
+    ];
 }

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState({});
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
@@ -50,41 +50,42 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    useEffect(() => {
+    const checkAuth = async () => {
 
-        const checkAuth = async () => {
+        try {
 
-            try {
+            const response = await fetch("http://localhost:3000/api/routes/api.php?action=check-auth", {
 
-                const response = await fetch("http://localhost:3000/api/routes/api.php?action=check-auth", {
+                credentials: "include"
 
-                    credentials: "include"
+            })
 
-                })
-
-                if (!response.ok) {
-                    throw new Error("Auth check failed")
-                }
-
-                const data = await response.json()
-
-                if (data.authenticated) {
-                    setUser(data.user)
-                    console.log(data)
-                    setIsAuthenticated(true)
-                    console.log("this ran")
-
-                }
-
+            if (!response.ok) {
+                throw new Error("Auth check failed")
             }
-            catch (error) {
-                console.log("Auth check error: ", error)
+
+            const data = await response.json()
+
+            if (data.authenticated) {
+                setUser(data.user)
+                setIsAuthenticated(true)
             }
-            finally {
-                setIsLoading(false)
-            }
+
+            console.log(data)
 
         }
+        catch (error) {
+            console.log("Auth check error: ", error)
+        }
+        finally {
+            setIsLoading(false)
+        }
+
+        console.log("this ran")
+
+    }
+
+    useEffect(() => {
 
         checkAuth()
 
