@@ -57,6 +57,10 @@ try {
             $response = login(pdo: $pdo, username: $input["username"], password: $input["password"]);
             break;
 
+        case "check-auth":
+            $response = auth_check();
+            break;
+
         default:
             echo json_encode($response);
             break;

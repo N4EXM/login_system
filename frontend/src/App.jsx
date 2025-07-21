@@ -21,15 +21,15 @@ function App() {
               <Routes>
                 <Route
                   path='/'
-                  element={<LoginPage/>}
+                  element={<Home/>}
                 />
                 <Route
                   path='/Register'
                   element={<RegisterPage/>}
                 />
                 <Route
-                  path='/Home'
-                  element={<Home/>}
+                  path='/Login'
+                  element={<LoginPage/>}
                 />
                 {/* protected routes */}
                 <Route 
